@@ -6,25 +6,122 @@
               content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Add Product</title>
+        <style>
+            body {
+                font-family: sans-serif;
+
+                margin: 0;
+                padding: 0;
+            }
+
+            main {
+                padding: 1rem;
+            }
+
+            .main-header {
+                width: 100%;
+                height: 3.5rem;
+                padding: 0 1.5rem;
+
+                background-color: #dbc441;
+            }
+
+            .main-header__nav {
+                height: 100%;
+                display: flex;
+                align-items: center;
+            }
+
+            .main-header__item-list {
+                display: flex;
+                margin: 0;
+                padding: 0;
+
+                list-style: none;
+            }
+
+            .main-header__item {
+                margin: 0;
+                padding: 0 1rem;
+            }
+
+            .main-header__item-link {
+                color: black;
+                text-decoration: none;
+            }
+
+            .main-header__item-link:hover,
+            .main-header__item-link:active,
+            .main-header__item-link.main-header__item-link--active {
+                color: #3e00a1;
+            }
+
+            .product-form {
+                width: 20rem;
+                max-width: 90%;
+                margin: auto;
+            }
+
+            .form-control {
+                margin: 1rem 0;
+            }
+
+            .form-control__label,
+            .form-control__input {
+                display: block;
+                width: 100%;
+            }
+
+            .form-control__input {
+                font: inherit;
+
+                border: 1px solid #dbc441;
+                border-radius: 2px;
+            }
+
+            button {
+                font: inherit;
+                color: #3e00a1;
+
+                border: 1px solid #3e00a1;
+                border-radius: 3px;
+
+                background-color: white;
+
+                cursor: pointer;
+            }
+
+            button:hover,
+            button:active {
+                color: white;
+
+                background-color: #3e00a1;
+            }
+        </style>
     </head>
     <body>
-        <header>
-            <nav>
-                <ul>
-                    <li>
-                        <a href="/">Shop</a>
+        <header class="main-header">
+            <nav class="main-header__nav">
+                <ul class="main-header__item-list">
+                    <li class="main-header__item">
+                        <a class="main-header__item-link" href="/">Shop</a>
                     </li>
 
-                    <li>
-                        <a href="/admin/add-product">Add Product</a>
+                    <li class="main-header__item">
+                        <a class="main-header__item-link main-header__item-link--active" href="/admin/add-product">Add
+                            Product</a>
                     </li>
                 </ul>
             </nav>
         </header>
 
         <main>
-            <form action="/add-product" method="POST">
-                <input type="text" name="title">
+            <form class="product-form" action="/admin/add-product" method="POST">
+                <div class="form-control">
+                    <label class="form-control__label" for="title">Title</label>
+
+                    <input class="form-control__input" type="text" name="title" id="title">
+                </div>
 
                 <button type="submit">Add Product</button>
             </form>
