@@ -5,7 +5,7 @@ html(lang="en")
         meta(name="viewport", content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0")
         meta(http-equiv="X-UA-Compatible", content="ie=edge")
 
-        title Page Not Found
+        title #{pageTitle}
 
         link(rel="stylesheet", href="/css/main.css")
         block styles
@@ -15,10 +15,10 @@ html(lang="en")
             nav.main-header__nav
                 ul.main-header__item-list
                     li.main-header__item
-                        a.main-header__item-link(href="/") Shop
+                        a.main-header__item-link(href="/", class=(path === "/" ? "main-header__item-link--active" : "")) Shop
 
                     li.main-header__item
-                        a.main-header__item-link(href="/admin/add-product") Add Product
+                        a.main-header__item-link(href="/admin/add-product", class=(path === "/admin/add-product" ? "main-header__item-link--active" : "")) Add Product
 
         main
             block content
