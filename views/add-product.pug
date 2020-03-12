@@ -1,31 +1,15 @@
-<!DOCTYPE html>
-html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0")
-        meta(http-equiv="X-UA-Compatible", content="ie=edge")
+extends layouts/main-layout
 
-        title #{pageTitle}
+block styles
+    link(rel="stylesheet", href="/css/forms.css")
+    link(rel="stylesheet", href="/css/product.css")
 
-        link(rel="stylesheet", href="/css/main.css")
-        link(rel="stylesheet", href="/css/forms.css")
-        link(rel="stylesheet", href="/css/product.css")
+block content
+    form.product-form(action="/admin/add-product", method="POST")
+        .form-control
+            label.form-control__label(for="title") Title
 
-    body
-        header.main-header
-            nav.main-header__nav
-                ul.main-header__item-list
-                    li.main-header__item
-                        a.main-header__item-link(href="/") Shop
+            input.form-control__input(type="text", name="title", id="title")
 
-                    li.main-header__item
-                        a.main-header__item-link.main-header__item-link--active(href="/admin/add-product") Add Product
+        button.btn(type="submit") Add Product
 
-        main
-            form.product-form(action="/admin/add-product", method="POST")
-                .form-control
-                    label.form-control__label(for="title") Title
-
-                    input.form-control__input(type="text", name="title", id="title")
-
-                button.btn(type="submit") Add Product
