@@ -9,8 +9,12 @@ const shopRouter = require('./routes/shop');
 
 const app = express();
 
-app.engine('handlebars', expressHandlebars());
-app.set('view engine', 'handlebars');
+app.engine('hbs', expressHandlebars({
+	layoutsDir: 'views/layouts/',
+	defaultLayout: 'main-layout',
+	extname: 'hbs',
+}));
+app.set('view engine', 'hbs');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
