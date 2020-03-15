@@ -13,7 +13,7 @@ exports.postAddProduct = (request, response) => {
 };
 
 exports.getProducts = (request, response) => {
-	const products = Product.fetchAll();
-
-	response.render('shop', { prods: products, pageTitle: 'Shop', path: '/' });
+	Product.fetchAll((products) => {
+		response.render('shop', { prods: products, pageTitle: 'Shop', path: '/' });
+	});
 };
