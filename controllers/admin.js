@@ -10,7 +10,7 @@ exports.getAddProduct = (request, response) => {
 
 exports.postAddProduct = (request, response) => {
 	const { title, imageUrl, description, price } = request.body;
-	const product = new Product(title, imageUrl, description, price);
+	const product = new Product(null, title, imageUrl, description, price);
 
 	product.save();
 
@@ -41,7 +41,12 @@ exports.getEditProduct = (request, response) => {
 };
 
 exports.postEditProduct = (request, response) => {
-	response.redirect('/');
+	const { productId, title, imageUrl, description, price } = request.body;
+	const updatedProduct = new Product(productId, title, imageUrl, description, price);
+
+	updatedProduct.save();
+
+	response.redirect('/admin/products');
 };
 
 exports.getProducts = (request, response) => {
