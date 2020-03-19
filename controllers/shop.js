@@ -35,6 +35,13 @@ exports.getCart = (request, response) => {
 	});
 };
 
+exports.postCart = (request, response) => {
+	const { productId } = request.body;
+
+	console.log(productId);
+	response.redirect('/cart');
+};
+
 exports.getOrders = (request, response) => {
 	response.render('shop/orders', {
 		pageTitle: 'Your Orders',
