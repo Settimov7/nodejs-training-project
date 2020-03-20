@@ -20,14 +20,14 @@ exports.postAddProduct = (request, response) => {
 exports.getEditProduct = (request, response) => {
 	const editMode = request.query.edit;
 
-	if(!editMode) {
+	if (!editMode) {
 		return response.redirect('/');
 	}
 
 	const { productId } = request.params;
 
 	Product.findById(productId, (product) => {
-		if(!product) {
+		if (!product) {
 			return response.redirect('/');
 		}
 
@@ -57,4 +57,12 @@ exports.getProducts = (request, response) => {
 			prods: products
 		});
 	});
+};
+
+exports.postDeleteProduct = (request, response) => {
+	const { productId } = request.body;
+
+	Product.deleteById(productId);
+
+	response.redirect('/admin/products');
 };
