@@ -16,12 +16,12 @@ exports.getProducts = (request, response) => {
 exports.getProduct = (request, response) => {
 	const { productId } = request.params;
 
-	Product.findById(productId)
-	.then(([product]) => {
+	Product.findByPk(productId)
+	.then((product) => {
 		response.render('shop/product-details', {
 			pageTitle: product.title,
 			path: '/products',
-			product: product[0],
+			product: product,
 		});
 	})
 	.catch((error) => console.log(error));
