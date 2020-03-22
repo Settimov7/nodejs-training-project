@@ -50,13 +50,15 @@ exports.postEditProduct = (request, response) => {
 };
 
 exports.getProducts = (request, response) => {
-	Product.fetchAll((products) => {
+	Product.fetchAll()
+	.then(([products]) => {
 		response.render('admin/products', {
 			pageTitle: 'Admin Products',
-			path: 'admin/products',
+			path: '/admin/products',
 			prods: products
 		});
-	});
+	})
+	.catch((error) => console.log(error));
 };
 
 exports.postDeleteProduct = (request, response) => {
