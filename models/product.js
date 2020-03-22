@@ -11,7 +11,12 @@ module.exports = class Product {
 	}
 
 	save() {
+		const { title, price, imageUrl, description } = this;
 
+		return database.execute(
+			'INSERT INTO products (title, price, imageUrl, description) VALUES (?, ?, ?, ?)',
+			[title, price, imageUrl, description],
+		);
 	}
 
 	static fetchAll() {

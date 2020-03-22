@@ -12,9 +12,11 @@ exports.postAddProduct = (request, response) => {
 	const { title, imageUrl, description, price } = request.body;
 	const product = new Product(null, title, imageUrl, description, price);
 
-	product.save();
-
-	response.redirect('/');
+	product.save()
+	.then(() => {
+		response.redirect('/');
+	})
+	.catch((error) => console.log(error));
 };
 
 exports.getEditProduct = (request, response) => {
