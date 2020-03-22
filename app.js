@@ -7,10 +7,17 @@ const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 
 const errorsController = require('./controllers/errors');
+const database = require('./util/database');
 
 const app = express();
 
 app.set('view engine', 'ejs');
+
+database.execute('SELECT * FROM products')
+	.then((result) => {})
+	.catch((error) => {
+		console.log(error);
+	});
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
