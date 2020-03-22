@@ -52,8 +52,8 @@ exports.postEditProduct = (request, response) => {
 };
 
 exports.getProducts = (request, response) => {
-	Product.fetchAll()
-	.then(([products]) => {
+	Product.findAll()
+	.then((products) => {
 		response.render('admin/products', {
 			pageTitle: 'Admin Products',
 			path: '/admin/products',
