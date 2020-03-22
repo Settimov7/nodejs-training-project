@@ -2,8 +2,8 @@ const Product = require('../models/product');
 const Cart = require('../models/cart');
 
 exports.getProducts = (request, response) => {
-	Product.fetchAll()
-	.then(([products]) => {
+	Product.findAll()
+	.then((products) => {
 		response.render('shop/product-list', {
 			pageTitle: 'All Products',
 			path: '/products',
@@ -28,8 +28,8 @@ exports.getProduct = (request, response) => {
 };
 
 exports.getIndex = (request, response) => {
-	Product.fetchAll()
-	.then(([products]) => {
+	Product.findAll()
+	.then((products) => {
 		response.render('shop/index', {
 			pageTitle: 'Shop',
 			path: '/',
