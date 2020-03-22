@@ -16,9 +16,15 @@ exports.getProducts = (request, response) => {
 exports.getProduct = (request, response) => {
 	const { productId } = request.params;
 
-	Product.findById(productId, (product) => {
-		response.render('shop/product-details', { pageTitle: product.title, path: '/products', product });
-	});
+	Product.findById(productId)
+	.then(([product]) => {
+		response.render('shop/product-details', {
+			pageTitle: product.title,
+			path: '/products',
+			product: product[0],
+		});
+	})
+	.catch((error) => console.log(error));
 };
 
 exports.getIndex = (request, response) => {

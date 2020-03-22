@@ -28,7 +28,8 @@ exports.getEditProduct = (request, response) => {
 
 	const { productId } = request.params;
 
-	Product.findById(productId, (product) => {
+	Product.findById(productId)
+	.then(([product]) => {
 		if (!product) {
 			return response.redirect('/');
 		}
@@ -39,7 +40,8 @@ exports.getEditProduct = (request, response) => {
 			editing: !!editMode,
 			product,
 		});
-	});
+	})
+	.catch((error) => console.log(error));
 };
 
 exports.postEditProduct = (request, response) => {
