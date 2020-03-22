@@ -8,13 +8,11 @@ exports.getAddProduct = (request, response) => {
 	});
 };
 
-exports.postAddProduct = (request, response) => {
+exports.postAddProduct = (request) => {
 	const { title, imageUrl, description, price } = request.body;
-	const product = new Product(null, title, imageUrl, description, price);
 
-	product.save()
+	Product.create({ title, price, imageUrl, description })
 	.then(() => {
-		response.redirect('/');
 	})
 	.catch((error) => console.log(error));
 };
