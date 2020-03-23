@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const sequelize = require('./util/database');
 const Product = require('./models/product');
 const User = require('./models/user');
+const Cart = require('./models/cart');
+const CartItem = require('./models/cart-item');
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
@@ -18,7 +20,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use((request, response, next)=> {
+app.use((request, response, next) => {
 	User.findByPk(1)
 	.then((user) => {
 		request.user = user;
@@ -39,8 +41,13 @@ Product.belongsTo(User, {
 });
 
 User.hasMany(Product);
+User.hasOne(Cart);
 
-sequelize.sync()
+Cart.belongsTo(User);
+Cart.belongsToMany(Product, { through: CartItem });
+Product.belongsToMany(Cart, { through: CartItem });
+
+sequelize.sync({ force: true })
 .then(() => User.findByPk(1))
 .then((user) => {
 	if (!user) {
