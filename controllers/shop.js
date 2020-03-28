@@ -134,8 +134,13 @@ exports.postOrder = (request, response) => {
 };
 
 exports.getOrders = (request, response) => {
-	response.render('shop/orders', {
-		pageTitle: 'Your Orders',
-		path: '/orders'
-	});
+	request.user.getOrders({ include: ['products'] })
+	.then((orders) => {
+		response.render('shop/orders', {
+			pageTitle: 'Your Orders',
+			path: '/orders',
+			orders,
+		});
+	})
+	.catch((error) => console.log(error));
 };
