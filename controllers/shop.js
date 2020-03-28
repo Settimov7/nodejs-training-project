@@ -107,8 +107,14 @@ exports.postCartDeleteProduct = (request, response) => {
 };
 
 exports.postOrder = (request, response) => {
+	let fetchedCart;
+
 	request.user.getCart()
-	.then((cart) => cart.getProducts())
+	.then((cart) => {
+		fetchedCart = cart;
+
+		return  cart.getProducts();
+	})
 	.then((products) => {
 		return request.user.createOrder()
 		.then((order) => order.addProducts(products.map((product) => {
@@ -120,6 +126,7 @@ exports.postOrder = (request, response) => {
 		})))
 		.catch((error) => console.log(error));
 	})
+	.then(() => fetchedCart.setProducts(null))
 	.then(() => {
 		response.redirect('/orders');
 	})
@@ -130,13 +137,5 @@ exports.getOrders = (request, response) => {
 	response.render('shop/orders', {
 		pageTitle: 'Your Orders',
 		path: '/orders'
-	});
-};
-
-
-exports.getCheckout = (request, response) => {
-	response.render('shop/checkout', {
-		pageTitle: 'Checkout',
-		path: '/checkout'
 	});
 };
