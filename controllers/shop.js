@@ -94,11 +94,17 @@ exports.postCart = (request, response) => {
 exports.postCartDeleteProduct = (request, response) => {
 	const { productId } = request.body;
 
-	Product.findById(productId, ({ price }) => {
-		Cart.deleteProduct(productId, price);
+	request.user.getCart()
+	.then((cart) => cart.getProducts({ where: { id: productId } }))
+	.then((products) => {
+		const product = products[0];
 
+		return product.cartItem.destroy();
+	})
+	.then((result) => {
 		response.redirect('/cart');
-	});
+	})
+	.catch((error) => console.log(error));
 };
 
 exports.getOrders = (request, response) => {
