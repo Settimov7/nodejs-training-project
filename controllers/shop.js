@@ -15,7 +15,7 @@ exports.getProducts = (request, response) => {
 exports.getProduct = (request, response) => {
 	const { productId } = request.params;
 
-	Product.findByPk(productId)
+	Product.findById(productId)
 	.then((product) => {
 		response.render('shop/product-details', {
 			pageTitle: product.title,
