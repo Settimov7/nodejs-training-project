@@ -11,8 +11,25 @@ class Product {
 	save() {
 		const database = getDataBase();
 
-		return database.collection('products').insertOne(this)
+		return database
+		.collection('products')
+		.insertOne(this)
 		.then((result) => console.log(result))
+		.catch((error) => console.log(error));
+	}
+
+	static fetchAll() {
+		const database = getDataBase();
+
+		return database
+		.collection('products')
+		.find()
+		.toArray()
+		.then((products) => {
+			console.log(products);
+
+			return products;
+		})
 		.catch((error) => console.log(error));
 	}
 }
