@@ -70,8 +70,7 @@ exports.getProducts = (request, response) => {
 exports.postDeleteProduct = (request, response) => {
 	const { productId } = request.body;
 
-	Product.findByPk(productId)
-	.then((product) => product.destroy())
+	Product.deleteById(productId)
 	.then(() => {
 		response.redirect('/admin/products');
 	})
