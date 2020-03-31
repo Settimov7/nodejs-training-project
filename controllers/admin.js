@@ -10,7 +10,8 @@ exports.getAddProduct = (request, response) => {
 
 exports.postAddProduct = (request, response) => {
 	const { title, imageUrl, description, price } = request.body;
-	const product = new Product(title, price, description, imageUrl);
+	const userId = request.user._id;
+	const product = new Product(title, price, description, imageUrl, null, userId);
 
 	product.save().then(() => {
 		response.redirect('/admin/products');
