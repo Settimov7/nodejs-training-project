@@ -26,9 +26,9 @@ exports.getEditProduct = (request, response) => {
 	}
 
 	const { productId } = request.params;
-	request.user.getProducts({ where: { id: productId }})
-	.then((products) => {
-		const product = products[0];
+
+	Product.findById(productId)
+	.then((product) => {
 
 		if (!product) {
 			return response.redirect('/');
@@ -46,16 +46,9 @@ exports.getEditProduct = (request, response) => {
 
 exports.postEditProduct = (request, response) => {
 	const { productId, title, imageUrl, description, price } = request.body;
+	const product = new Product(title, price, description, imageUrl, productId);
 
-	Product.findByPk(productId)
-	.then((product) => {
-		product.title = title;
-		product.price = price;
-		product.imageUrl = imageUrl;
-		product.description = description;
-
-		return product.save();
-	})
+	product.save()
 	.then(() => {
 		response.redirect('/admin/products');
 	})
@@ -63,7 +56,7 @@ exports.postEditProduct = (request, response) => {
 };
 
 exports.getProducts = (request, response) => {
-	request.user.getProducts()
+	Product.fetchAll()
 	.then((products) => {
 		response.render('admin/products', {
 			pageTitle: 'Admin Products',
