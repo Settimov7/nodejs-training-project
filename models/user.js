@@ -21,11 +21,11 @@ class User {
 
 	addToCard(product) {
 		const database = getDataBase();
-		const cartProductIndex = this.cart.items.findIndex((item)=> item.productId.toString() === product._id.toString());
+		const cartProductIndex = this.cart.items.findIndex((item) => item.productId.toString() === product._id.toString());
 		let newQuantity = 1;
 		const updatedCartItems = [...this.cart.items];
 
-		if(cartProductIndex >= 0) {
+		if (cartProductIndex >= 0) {
 			newQuantity = this.cart.items[cartProductIndex].quantity + 1;
 			updatedCartItems[cartProductIndex].quantity = newQuantity;
 		} else {
@@ -47,6 +47,20 @@ class User {
 				$set: { cart: updatedCart }
 			},
 		);
+	}
+
+	getCart() {
+		const database = getDataBase();
+		const productIds = this.cart.items.map((item) => item.productId);
+		return database
+		.collection('products')
+		.find({ _id: { $in: productIds } })
+		.toArray()
+		.then((products) => products.map((product) => ({
+			...product,
+			quantity: this.cart.items.find((item) => item.productId.toString() === product._id.toString()).quantity,
+		})))
+		.catch((error) => console.log(error));
 	}
 
 	static findById(id) {

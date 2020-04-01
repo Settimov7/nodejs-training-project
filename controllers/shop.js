@@ -39,8 +39,8 @@ exports.getIndex = (request, response) => {
 };
 
 exports.getCart = (request, response) => {
-	request.user.getCart()
-	.then((cart) => cart.getProducts())
+	request.user
+	.getCart()
 	.then((products) => {
 		response.render('shop/cart', {
 			pageTitle: 'Your Cart',
@@ -59,43 +59,9 @@ exports.postCart = (request, response) => {
 	})
 	.then((result) => {
 		console.log(result);
+		response.redirect('/cart');
 	})
 	.catch((error) => console.log(error));
-	// let fetchedCart;
-	// let newQuality = 1;
-	//
-	// request.user.getCart()
-	// .then((cart) => {
-	// 	fetchedCart = cart;
-	//
-	// 	return cart.getProducts({ where: { id: productId } });
-	// })
-	// .then((products) => {
-	// 	let product;
-	//
-	// 	if (products.length > 0) {
-	// 		product = products[0]
-	// 	}
-	//
-	// 	if (product) {
-	// 		const oldQuantity = product.cartItem.quantity;
-	//
-	// 		newQuality = oldQuantity + 1;
-	//
-	// 		return product;
-	// 	}
-	//
-	// 	return Product.findByPk(productId);
-	// })
-	// .then((product) => fetchedCart.addProduct(product, {
-	// 	through: {
-	// 		quantity: newQuality,
-	// 	},
-	// }))
-	// .then(() => {
-	// 	response.redirect('/cart');
-	// })
-	// .catch((error) => console.log(error));
 };
 
 exports.postCartDeleteProduct = (request, response) => {
@@ -121,7 +87,7 @@ exports.postOrder = (request, response) => {
 	.then((cart) => {
 		fetchedCart = cart;
 
-		return  cart.getProducts();
+		return cart.getProducts();
 	})
 	.then((products) => {
 		return request.user.createOrder()
