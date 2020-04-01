@@ -86,9 +86,18 @@ class User {
 	addOrder() {
 		const database = getDataBase();
 
-		return database
-		.collection('orders')
-		.insertOne(this.cart)
+		return this.getCart()
+		.then((products) => {
+			const order = {
+				items: products,
+				user: {
+					_id: new ObjectId(this._id),
+					name: this.name,
+				},
+			};
+
+			return database.collection('orders').insertOne(order);
+		})
 		.then(() => {
 			this.cart = { items: [] };
 
@@ -106,6 +115,13 @@ class User {
 			);
 		})
 		.catch((error) => console.log(error));
+	}
+
+	getOrders() {
+		const database = getDataBase();
+
+		// return database
+		// .collection('orders')
 	}
 
 	static findById(id) {
