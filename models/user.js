@@ -120,8 +120,10 @@ class User {
 	getOrders() {
 		const database = getDataBase();
 
-		// return database
-		// .collection('orders')
+		return database
+		.collection('orders')
+		.find({'user._id': new ObjectId(this._id)})
+		.toArray();
 	}
 
 	static findById(id) {

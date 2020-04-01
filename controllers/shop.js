@@ -83,7 +83,7 @@ exports.postOrder = (request, response) => {
 };
 
 exports.getOrders = (request, response) => {
-	request.user.getOrders({ include: ['products'] })
+	request.user.getOrders()
 	.then((orders) => {
 		response.render('shop/orders', {
 			pageTitle: 'Your Orders',
