@@ -44,7 +44,9 @@ class User {
 				_id: new ObjectId(this._id)
 			},
 			{
-				$set: { cart: updatedCart }
+				$set: {
+					cart: updatedCart
+				},
 			},
 		);
 	}
@@ -61,6 +63,24 @@ class User {
 			quantity: this.cart.items.find((item) => item.productId.toString() === product._id.toString()).quantity,
 		})))
 		.catch((error) => console.log(error));
+	}
+
+	deleteItemFromCart(productId) {
+		const database = getDataBase();
+		const updatedCartItems = this.cart.items.filter((item) => item.productId.toString() !== productId.toString());
+
+		return database.collection('users').updateOne(
+			{
+				_id: new ObjectId(this._id)
+			},
+			{
+				$set: {
+					cart: {
+						items: updatedCartItems
+					},
+				},
+			},
+		);
 	}
 
 	static findById(id) {
