@@ -75,26 +75,7 @@ exports.postCartDeleteProduct = (request, response) => {
 };
 
 exports.postOrder = (request, response) => {
-	let fetchedCart;
-
-	request.user.getCart()
-	.then((cart) => {
-		fetchedCart = cart;
-
-		return cart.getProducts();
-	})
-	.then((products) => {
-		return request.user.createOrder()
-		.then((order) => order.addProducts(products.map((product) => {
-			product.orderItem = {
-				quantity: product.cartItem.quantity,
-			};
-
-			return product;
-		})))
-		.catch((error) => console.log(error));
-	})
-	.then(() => fetchedCart.setProducts(null))
+	request.user.addOrder()
 	.then(() => {
 		response.redirect('/orders');
 	})
