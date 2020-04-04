@@ -106,7 +106,9 @@ exports.postOrder = (request, response) => {
 };
 
 exports.getOrders = (request, response) => {
-	request.user.getOrders()
+	Order.find({
+		'user.userId': request.user._id,
+	})
 	.then((orders) => {
 		response.render('shop/orders', {
 			pageTitle: 'Your Orders',
