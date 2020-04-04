@@ -48,7 +48,7 @@ exports.getIndex = (request, response) => {
 };
 
 exports.getCart = (request, response) => {
-	request.session.user
+	request.user
 	.populate('cart.items.productId')
 	.execPopulate()
 	.then((user) => {
@@ -69,7 +69,7 @@ exports.postCart = (request, response) => {
 	const { productId } = request.body;
 	Product.findById(productId)
 	.then((product) => {
-		return request.session.user.addToCart(product);
+		return request.user.addToCart(product);
 	})
 	.then((result) => {
 		console.log(result);
@@ -81,7 +81,7 @@ exports.postCart = (request, response) => {
 exports.postCartDeleteProduct = (request, response) => {
 	const { productId } = request.body;
 
-	request.session.user.removeFromCart(productId)
+	request.user.removeFromCart(productId)
 	.then(() => {
 		response.redirect('/cart');
 	})
@@ -89,7 +89,7 @@ exports.postCartDeleteProduct = (request, response) => {
 };
 
 exports.postOrder = (request, response) => {
-	request.session.user
+	request.user
 	.populate('cart.items.productId')
 	.execPopulate()
 	.then((user) => {
@@ -108,7 +108,7 @@ exports.postOrder = (request, response) => {
 
 		return order.save();
 	})
-	.then(() => request.session.user.clearCart())
+	.then(() => request.user.clearCart())
 	.then(() => {
 		response.redirect('/orders');
 	})
@@ -119,7 +119,7 @@ exports.getOrders = (request, response) => {
 	const isAuthenticated = request.session.isLoggedIn;
 
 	Order.find({
-		'user.userId': request.session.user._id,
+		'user.userId': request.user._id,
 	})
 	.then((orders) => {
 		response.render('shop/orders', {

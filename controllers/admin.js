@@ -13,7 +13,7 @@ exports.getAddProduct = (request, response) => {
 
 exports.postAddProduct = (request, response) => {
 	const { title, imageUrl, description, price } = request.body;
-	const user = request.session.user;
+	const user = request.user;
 	const product = new Product({ title, price, description, imageUrl, userId: user });
 
 	product.save().then(() => {
