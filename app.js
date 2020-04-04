@@ -1,11 +1,11 @@
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const errorsController = require('./controllers/errors');
-const { mongoConnect } = require('./util/database');
 const User = require('./models/user');
 
 const app = express();
@@ -32,6 +32,8 @@ app.use(shopRoutes);
 
 app.use(errorsController.get404);
 
-mongoConnect(() => {
+mongoose.connect('mongodb+srv://prytkov:N6BhxHED5lM0qM2A@cluster0-pui26.mongodb.net/test?retryWrites=true&w=majority')
+.then(() => {
 	app.listen(3000);
-});
+})
+.catch((error) => console.log(error));
