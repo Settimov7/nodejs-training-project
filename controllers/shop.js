@@ -1,4 +1,5 @@
 const Product = require('../models/product');
+const Order = require('../models/order');
 
 exports.getProducts = (request, response) => {
 	Product.find()
@@ -78,7 +79,26 @@ exports.postCartDeleteProduct = (request, response) => {
 };
 
 exports.postOrder = (request, response) => {
-	request.user.addOrder()
+	request.user
+	.populate('cart.items.productId')
+	.execPopulate()
+	.then((user) => {
+		const products = user.cart.items.map(({ productId, quantity }) => ({
+			product: productId._doc,
+			quantity,
+		}));
+
+		const order = new Order({
+			user: {
+				userId: user,
+				name: user.name,
+			},
+			products,
+		});
+
+		return order.save();
+	})
+	.then(() => request.user.clearCart())
 	.then(() => {
 		response.redirect('/orders');
 	})
