@@ -10,7 +10,8 @@ exports.getAddProduct = (request, response) => {
 
 exports.postAddProduct = (request, response) => {
 	const { title, imageUrl, description, price } = request.body;
-	const product = new Product({ title, price, description, imageUrl });
+	const user = request.user;
+	const product = new Product({ title, price, description, imageUrl, userId: user });
 
 	product.save().then(() => {
 		response.redirect('/admin/products');
@@ -64,6 +65,8 @@ exports.postEditProduct = (request, response) => {
 
 exports.getProducts = (request, response) => {
 	Product.find()
+	// .select('title price -_id')
+	// .populate('userId', 'name')
 	.then((products) => {
 		response.render('admin/products', {
 			pageTitle: 'Admin Products',
