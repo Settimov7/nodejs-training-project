@@ -20,3 +20,11 @@ exports.postLogin = (request, response) => {
 	})
 	.catch((error) => console.log(error));
 };
+
+exports.postLogout = (request, response) => {
+	request.session.destroy((error) => {
+		console.log(error);
+
+		response.redirect('/');
+	});
+};
