@@ -48,6 +48,12 @@ userSchema.methods.addToCart = function (product) {
 	return this.save();
 };
 
+userSchema.methods.removeFromCart = function (productId) {
+	this.cart.items = this.cart.items.filter((item) => item.productId.toString() !== productId.toString());
+
+	return this.save();
+};
+
 module.exports = model('User', userSchema);
 
 // const { ObjectId } = require('mongodb');
