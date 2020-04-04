@@ -45,10 +45,17 @@ exports.getEditProduct = (request, response) => {
 };
 
 exports.postEditProduct = (request, response) => {
-	const { productId, title, imageUrl, description, price } = request.body;
-	const product = new Product(title, price, description, imageUrl, productId);
+	const { productId, title, price, description, imageUrl } = request.body;
 
-	product.save()
+	Product.findById(productId)
+	.then((product) => {
+		product.title = title;
+		product.price = price;
+		product.description = description;
+		product.imageUrl = imageUrl;
+
+		return product.save();
+	})
 	.then(() => {
 		response.redirect('/admin/products');
 	})
