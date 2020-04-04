@@ -40,8 +40,11 @@ exports.getIndex = (request, response) => {
 
 exports.getCart = (request, response) => {
 	request.user
-	.getCart()
-	.then((products) => {
+	.populate('cart.items.productId')
+	.execPopulate()
+	.then((user) => {
+		const products = user.cart.items;
+
 		response.render('shop/cart', {
 			pageTitle: 'Your Cart',
 			path: '/cart',
