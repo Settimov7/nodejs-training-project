@@ -1,13 +1,10 @@
 const Product = require('../models/product');
 
 exports.getAddProduct = (request, response) => {
-	const isAuthenticated = request.session.isLoggedIn;
-
 	response.render('admin/edit-product', {
 		pageTitle: 'Add Product',
 		path: '/admin/add-product',
 		editing: false,
-		isAuthenticated,
 	});
 };
 
@@ -38,14 +35,11 @@ exports.getEditProduct = (request, response) => {
 			return response.redirect('/');
 		}
 
-		const isAuthenticated = request.session.isLoggedIn;
-
 		response.render('admin/edit-product', {
 			pageTitle: 'Edit Product',
 			path: '/admin/edit-product',
 			editing: !!editMode,
 			product,
-			isAuthenticated,
 		});
 	})
 	.catch((error) => console.log(error));
@@ -70,8 +64,6 @@ exports.postEditProduct = (request, response) => {
 };
 
 exports.getProducts = (request, response) => {
-	const isAuthenticated = request.session.isLoggedIn;
-
 	Product.find()
 	// .select('title price -_id')
 	// .populate('userId', 'name')
@@ -80,7 +72,6 @@ exports.getProducts = (request, response) => {
 			pageTitle: 'Admin Products',
 			path: '/admin/products',
 			prods: products,
-			isAuthenticated,
 		});
 	})
 	.catch((error) => console.log(error));
