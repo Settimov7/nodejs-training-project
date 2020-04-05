@@ -1,10 +1,12 @@
 const path = require('path');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const createMongodbStore = require('connect-mongodb-session');
 const csrf = require('csurf');
+const flash = require('connect-flash');
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
@@ -35,6 +37,7 @@ app.use(session({
 	store,
 }));
 app.use(csrfProtection);
+app.use(flash());
 
 app.use((request, response, next) => {
 	if (!request.session.user) {

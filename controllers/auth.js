@@ -3,9 +3,17 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
 exports.getLogin = (request, response) => {
+	let errorMessage = request.flash('error');
+	if (errorMessage.length > 0) {
+		errorMessage = errorMessage[0];
+	} else {
+		errorMessage = null;
+	}
+
 	response.render('auth/login', {
 		pageTitle: 'Login',
 		path: '/login',
+		errorMessage,
 	});
 };
 
@@ -15,6 +23,8 @@ exports.postLogin = (request, response) => {
 	User.findOne({ email })
 	.then((user) => {
 		if (!user) {
+			request.flash('error', 'Invalid email.');
+
 			return response.redirect('/login');
 		}
 
@@ -30,6 +40,8 @@ exports.postLogin = (request, response) => {
 					response.redirect('/');
 				});
 			}
+
+			request.flash('error', 'Invalid password.');
 
 			response.redirect('/login');
 		})
@@ -51,9 +63,17 @@ exports.postLogout = (request, response) => {
 };
 
 exports.getSignUp = (request, response) => {
+	let errorMessage = request.flash('error');
+	if (errorMessage.length > 0) {
+		errorMessage = errorMessage[0];
+	} else {
+		errorMessage = null;
+	}
+
 	response.render('auth/signup', {
 		pageTitle: 'Signup',
 		path: '/signup',
+		errorMessage,
 	});
 };
 
@@ -63,6 +83,8 @@ exports.postSignUp = (request, response) => {
 	User.findOne({ email })
 	.then((user) => {
 		if (user) {
+			request.flash('error', 'Email exists already, please pick a different one.');
+
 			return response.redirect('/signup');
 		}
 
