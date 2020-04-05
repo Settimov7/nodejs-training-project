@@ -123,3 +123,18 @@ exports.postSignUp = (request, response) => {
 	})
 	.catch((error) => console.log(error));
 };
+
+exports.getReset = (request, response) => {
+	let errorMessage = request.flash('error');
+	if (errorMessage.length > 0) {
+		errorMessage = errorMessage[0];
+	} else {
+		errorMessage = null;
+	}
+
+	response.render('auth/reset', {
+		pageTitle: 'Reset Password',
+		path: '/reset',
+		errorMessage,
+	});
+};
