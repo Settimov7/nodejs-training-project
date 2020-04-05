@@ -13,13 +13,33 @@ exports.getLogin = (request, response) => {
 };
 
 exports.postLogin = (request, response) => {
-	User.findById('5e8826dee499c7011c520f15')
-	.then((user) => {
-		request.session.isLoggedIn = true;
-		request.session.user = user;
+	const { email, password } = request.body;
 
-		request.session.save(() => {
-			response.redirect('/');
+	User.findOne({ email })
+	.then((user) => {
+		if (!user) {
+			return response.redirect('/login');
+		}
+
+		bcrypt.compare(password, user.password)
+		.then((doMatch) => {
+			if (doMatch) {
+				request.session.isLoggedIn = true;
+				request.session.user = user;
+
+				return request.session.save((error) => {
+					console.log(error);
+
+					response.redirect('/');
+				});
+			}
+
+			response.redirect('/login');
+		})
+		.catch((error) => {
+			console.log(error);
+
+			response.redirect('/login');
 		});
 	})
 	.catch((error) => console.log(error));
