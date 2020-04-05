@@ -34,7 +34,7 @@ app.use(session({
 }));
 
 app.use((request, response, next) => {
-	if(!request.session.user) {
+	if (!request.session.user) {
 		return next();
 	}
 
@@ -55,20 +55,6 @@ app.use(errorsController.get404);
 
 mongoose.connect(MONGODB_URI)
 .then(() => {
-	User.findOne().then((user) => {
-		if (!user) {
-			const user = new User({
-				name: 'Name',
-				email: 'name@mail.com',
-				cart: {
-					items: [],
-				},
-			});
-
-			user.save();
-		}
-	});
-
 	app.listen(3000);
 })
 .catch((error) => console.log(error));
