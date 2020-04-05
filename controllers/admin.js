@@ -50,21 +50,25 @@ exports.postEditProduct = (request, response) => {
 
 	Product.findById(productId)
 	.then((product) => {
+		if (product.userId.toString() !== request.user._id.toString()) {
+			return response.redirect('/');
+		}
+
 		product.title = title;
 		product.price = price;
 		product.description = description;
 		product.imageUrl = imageUrl;
 
-		return product.save();
-	})
-	.then(() => {
-		response.redirect('/admin/products');
+		return product.save()
+		.then(() => {
+			response.redirect('/admin/products');
+		});
 	})
 	.catch((error) => console.log(error));
 };
 
 exports.getProducts = (request, response) => {
-	Product.find()
+	Product.find({ userId: request.user._id })
 	// .select('title price -_id')
 	// .populate('userId', 'name')
 	.then((products) => {
@@ -80,7 +84,10 @@ exports.getProducts = (request, response) => {
 exports.postDeleteProduct = (request, response) => {
 	const { productId } = request.body;
 
-	Product.findByIdAndRemove(productId)
+	Product.deleteOne({
+		_id: productId,
+		userId: request.user._id,
+	})
 	.then(() => {
 		response.redirect('/admin/products');
 	})
