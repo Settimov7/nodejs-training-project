@@ -7,6 +7,7 @@ const session = require('express-session');
 const createMongodbStore = require('connect-mongodb-session');
 const csrf = require('csurf');
 const flash = require('connect-flash');
+require('dotenv').config();
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
@@ -14,7 +15,7 @@ const authRoutes = require('./routes/auth');
 const errorsController = require('./controllers/errors');
 const User = require('./models/user');
 
-const MONGODB_URI = 'mongodb+srv://prytkov:N6BhxHED5lM0qM2A@cluster0-pui26.mongodb.net/shop';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 const app = express();
 const MongodbStore = createMongodbStore(session);
