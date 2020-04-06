@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const sendGridTransport = require('nodemailer-sendgrid-transport');
 require('dotenv').config();
+const { validationResult } = require('express-validator/check');
 
 const User = require('../models/user');
 
@@ -89,39 +90,38 @@ exports.getSignUp = (request, response) => {
 };
 
 exports.postSignUp = (request, response) => {
-	const { email, password, confirmPassword } = request.body;
+	const { email, password } = request.body;
+	const errors = validationResult(request);
 
-	User.findOne({ email })
-	.then((user) => {
-		if (user) {
-			request.flash('error', 'Email exists already, please pick a different one.');
+	if (!errors.isEmpty()) {
+		return response.status(422).render('auth/signup', {
+			pageTitle: 'Signup',
+			path: '/signup',
+			errorMessage: errors.array()[0].msg,
+		});
+	}
 
-			return response.redirect('/signup');
-		}
+	bcrypt.hash(password, 12)
+	.then((hashedPassword) => {
+		const newUser = new User({
+			email,
+			password: hashedPassword,
+			cart: {
+				items: [],
+			},
+		});
 
-		return bcrypt.hash(password, 12)
-		.then((hashedPassword) => {
-			const newUser = new User({
-				email,
-				password: hashedPassword,
-				cart: {
-					items: [],
-				},
-			});
+		return newUser.save();
+	})
+	.then(() => {
+		response.redirect('/login');
 
-			return newUser.save();
-		})
-		.then(() => {
-			response.redirect('/login');
-
-			return transporter.sendMail({
-				to: email,
-				from: 'shop@node-complete.com',
-				subject: 'Signup succeeded!',
-				html: '<h1>You successfully signed up!</h1>'
-			});
-		})
-		.catch((error) => console.log(error));
+		return transporter.sendMail({
+			to: email,
+			from: 'shop@node-complete.com',
+			subject: 'Signup succeeded!',
+			html: '<h1>You successfully signed up!</h1>'
+		});
 	})
 	.catch((error) => console.log(error));
 };
