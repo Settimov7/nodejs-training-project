@@ -32,6 +32,16 @@ exports.getLogin = (request, response) => {
 exports.postLogin = (request, response) => {
 	const { email, password } = request.body;
 
+	const errors = validationResult(request);
+
+	if (!errors.isEmpty()) {
+		return response.status(422).render('auth/login', {
+			pageTitle: 'Login',
+			path: '/login',
+			errorMessage: errors.array()[0].msg,
+		});
+	}
+
 	User.findOne({ email })
 	.then((user) => {
 		if (!user) {

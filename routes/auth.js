@@ -8,14 +8,19 @@ const router = express.Router();
 
 router.get('/login', authController.getLogin);
 
-router.post('/login', authController.postLogin);
+router.post('/login', [
+		body('email').isEmail().withMessage('Please enter a valid email'),
+		body('password', 'Please enter a password with only numbers and text and at least 5 characters.')
+		.isLength({ min: 5 })
+		.isAlphanumeric(),
+	],
+	authController.postLogin);
 
 router.post('/logout', authController.postLogout);
 
 router.get('/signup', authController.getSignUp);
 
-router.post('/signup',
-	[
+router.post('/signup', [
 		check('email').isEmail().withMessage('Please enter a valid email')
 		.custom((value) => {
 			return User.findOne({ email: value })
