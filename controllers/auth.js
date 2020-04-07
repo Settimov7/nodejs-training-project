@@ -26,6 +26,11 @@ exports.getLogin = (request, response) => {
 		pageTitle: 'Login',
 		path: '/login',
 		errorMessage,
+		oldInput: {
+			email: '',
+			password: '',
+		},
+		validationErrors: [],
 	});
 };
 
@@ -39,15 +44,27 @@ exports.postLogin = (request, response) => {
 			pageTitle: 'Login',
 			path: '/login',
 			errorMessage: errors.array()[0].msg,
+			oldInput: {
+				email,
+				password,
+			},
+			validationErrors: errors.array(),
 		});
 	}
 
 	User.findOne({ email })
 	.then((user) => {
 		if (!user) {
-			request.flash('error', 'Invalid email.');
-
-			return response.redirect('/login');
+			return response.status(422).render('auth/login', {
+				pageTitle: 'Login',
+				path: '/login',
+				errorMessage: 'Invalid email.',
+				oldInput: {
+					email,
+					password,
+				},
+				validationErrors: [{ param: 'email' }],
+			});
 		}
 
 		bcrypt.compare(password, user.password)
@@ -63,9 +80,16 @@ exports.postLogin = (request, response) => {
 				});
 			}
 
-			request.flash('error', 'Invalid password.');
-
-			response.redirect('/login');
+			return response.status(422).render('auth/login', {
+				pageTitle: 'Login',
+				path: '/login',
+				errorMessage: 'Invalid password.',
+				oldInput: {
+					email,
+					password,
+				},
+				validationErrors: [{ param: 'password' }],
+			});
 		})
 		.catch((error) => {
 			console.log(error);
