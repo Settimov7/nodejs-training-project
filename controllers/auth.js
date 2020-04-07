@@ -96,11 +96,17 @@ exports.getSignUp = (request, response) => {
 		pageTitle: 'Signup',
 		path: '/signup',
 		errorMessage,
+		oldInput: {
+			email: '',
+			password: '',
+			confirmPassword: '',
+		},
+		validationErrors: [],
 	});
 };
 
 exports.postSignUp = (request, response) => {
-	const { email, password } = request.body;
+	const { email, password, confirmPassword } = request.body;
 	const errors = validationResult(request);
 
 	if (!errors.isEmpty()) {
@@ -108,6 +114,12 @@ exports.postSignUp = (request, response) => {
 			pageTitle: 'Signup',
 			path: '/signup',
 			errorMessage: errors.array()[0].msg,
+			oldInput: {
+				email,
+				password,
+				confirmPassword,
+			},
+			validationErrors: errors.array(),
 		});
 	}
 
