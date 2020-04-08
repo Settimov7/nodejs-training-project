@@ -1,3 +1,5 @@
+const { validationResult } = require('express-validator/check');
+
 const Product = require('../models/product');
 
 exports.getAddProduct = (request, response) => {
@@ -5,6 +7,9 @@ exports.getAddProduct = (request, response) => {
 		pageTitle: 'Add Product',
 		path: '/admin/add-product',
 		editing: false,
+		hasError: false,
+		errorMessage: null,
+		validationErrors: [],
 	});
 };
 
@@ -12,6 +17,24 @@ exports.postAddProduct = (request, response) => {
 	const { title, imageUrl, description, price } = request.body;
 	const user = request.user;
 	const product = new Product({ title, price, description, imageUrl, userId: user });
+	const errors = validationResult(request);
+
+	if(!errors.isEmpty()) {
+		return response.status(422).render('admin/edit-product', {
+			pageTitle: 'Add Product',
+			path: '/admin/add-product',
+			editing: false,
+			hasError: true,
+			product: {
+				title,
+				imageUrl,
+				price,
+				description,
+			},
+			errorMessage: errors.array()[0].msg,
+			validationErrors: errors.array(),
+		});
+	}
 
 	product.save().then(() => {
 		response.redirect('/admin/products');
@@ -39,7 +62,10 @@ exports.getEditProduct = (request, response) => {
 			pageTitle: 'Edit Product',
 			path: '/admin/edit-product',
 			editing: !!editMode,
+			hasError: false,
 			product,
+			errorMessage: null,
+			validationErrors: [],
 		});
 	})
 	.catch((error) => console.log(error));
@@ -47,6 +73,25 @@ exports.getEditProduct = (request, response) => {
 
 exports.postEditProduct = (request, response) => {
 	const { productId, title, price, description, imageUrl } = request.body;
+	const errors = validationResult(request);
+
+	if(!errors.isEmpty()) {
+		return response.status(422).render('admin/edit-product', {
+			pageTitle: 'Edit Product',
+			path: '/admin/edit-product',
+			editing: true,
+			hasError: true,
+			product: {
+				title,
+				imageUrl,
+				price,
+				description,
+				_id: productId,
+			},
+			errorMessage: errors.array()[0].msg,
+			validationErrors: errors.array(),
+		});
+	}
 
 	Product.findById(productId)
 	.then((product) => {
