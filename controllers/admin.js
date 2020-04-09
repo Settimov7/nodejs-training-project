@@ -13,13 +13,11 @@ exports.getAddProduct = (request, response) => {
 	});
 };
 
-exports.postAddProduct = (request, response) => {
-	const { title, imageUrl, description, price } = request.body;
-	const user = request.user;
-	const product = new Product({ title, price, description, imageUrl, userId: user });
-	const errors = validationResult(request);
+exports.postAddProduct = (request, response, next) => {
+	const { title, description, price } = request.body;
+	const image = request.file;
 
-	if(!errors.isEmpty()) {
+	if (!image) {
 		return response.status(422).render('admin/edit-product', {
 			pageTitle: 'Add Product',
 			path: '/admin/add-product',
@@ -27,7 +25,28 @@ exports.postAddProduct = (request, response) => {
 			hasError: true,
 			product: {
 				title,
-				imageUrl,
+				price,
+				description,
+			},
+			errorMessage: 'Attached image is not an image',
+			validationErrors: [],
+		});
+	}
+
+	const imageUrl = image.path;
+
+	const user = request.user;
+	const product = new Product({ title, price, description, imageUrl, userId: user });
+	const errors = validationResult(request);
+
+	if (!errors.isEmpty()) {
+		return response.status(422).render('admin/edit-product', {
+			pageTitle: 'Add Product',
+			path: '/admin/add-product',
+			editing: false,
+			hasError: true,
+			product: {
+				title,
 				price,
 				description,
 			},
@@ -47,7 +66,7 @@ exports.postAddProduct = (request, response) => {
 	});
 };
 
-exports.getEditProduct = (request, response) => {
+exports.getEditProduct = (request, response, next) => {
 	const editMode = request.query.edit;
 
 	if (!editMode) {
@@ -81,11 +100,12 @@ exports.getEditProduct = (request, response) => {
 	});
 };
 
-exports.postEditProduct = (request, response) => {
-	const { productId, title, price, description, imageUrl } = request.body;
+exports.postEditProduct = (request, response, next) => {
+	const { productId, title, price, description } = request.body;
+	const image = request.file;
 	const errors = validationResult(request);
 
-	if(!errors.isEmpty()) {
+	if (!errors.isEmpty()) {
 		return response.status(422).render('admin/edit-product', {
 			pageTitle: 'Edit Product',
 			path: '/admin/edit-product',
@@ -93,7 +113,6 @@ exports.postEditProduct = (request, response) => {
 			hasError: true,
 			product: {
 				title,
-				imageUrl,
 				price,
 				description,
 				_id: productId,
@@ -112,7 +131,10 @@ exports.postEditProduct = (request, response) => {
 		product.title = title;
 		product.price = price;
 		product.description = description;
-		product.imageUrl = imageUrl;
+
+		if (image) {
+			product.imageUrl = image.path;
+		}
 
 		return product.save()
 		.then(() => {
@@ -127,7 +149,7 @@ exports.postEditProduct = (request, response) => {
 	});
 };
 
-exports.getProducts = (request, response) => {
+exports.getProducts = (request, response, next) => {
 	Product.find({ userId: request.user._id })
 	// .select('title price -_id')
 	// .populate('userId', 'name')
@@ -146,7 +168,7 @@ exports.getProducts = (request, response) => {
 	});
 };
 
-exports.postDeleteProduct = (request, response) => {
+exports.postDeleteProduct = (request, response, next) => {
 	const { productId } = request.body;
 
 	Product.deleteOne({

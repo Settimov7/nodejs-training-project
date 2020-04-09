@@ -13,7 +13,6 @@ router.get('/add-product', iAuth, adminController.getAddProduct);
 router.post('/add-product',
 	[
 		body('title').isString().isLength({ min: 3 }).trim(),
-		body('imageUrl').isURL(),
 		body('price').isFloat(),
 		body('title').isLength({ min: 5, max: 200 }).trim(),
 	],
@@ -26,7 +25,6 @@ router.get('/edit-product/:productId', iAuth, adminController.getEditProduct);
 router.post('/edit-product',
 	[
 		body('title').isString().isLength({ min: 3 }).trim(),
-		body('imageUrl').isURL(),
 		body('price').isFloat(),
 		body('title').isLength({ min: 5, max: 200 }).trim(),
 	],

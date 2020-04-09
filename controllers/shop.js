@@ -1,7 +1,7 @@
 const Product = require('../models/product');
 const Order = require('../models/order');
 
-exports.getProducts = (request, response) => {
+exports.getProducts = (request, response, next) => {
 	Product.find()
 	.then((products) => {
 		response.render('shop/product-list', {
@@ -18,7 +18,7 @@ exports.getProducts = (request, response) => {
 	});
 };
 
-exports.getProduct = (request, response) => {
+exports.getProduct = (request, response, next) => {
 	const { productId } = request.params;
 
 	Product.findById(productId)
@@ -37,7 +37,7 @@ exports.getProduct = (request, response) => {
 	});
 };
 
-exports.getIndex = (request, response) => {
+exports.getIndex = (request, response, next) => {
 	Product.find()
 	.then((products) => {
 		response.render('shop/index', {
@@ -54,7 +54,7 @@ exports.getIndex = (request, response) => {
 	});
 };
 
-exports.getCart = (request, response) => {
+exports.getCart = (request, response, next) => {
 	request.user
 	.populate('cart.items.productId')
 	.execPopulate()
@@ -75,7 +75,7 @@ exports.getCart = (request, response) => {
 	});
 };
 
-exports.postCart = (request, response) => {
+exports.postCart = (request, response, next) => {
 	const { productId } = request.body;
 	Product.findById(productId)
 	.then((product) => {
@@ -93,7 +93,7 @@ exports.postCart = (request, response) => {
 	});
 };
 
-exports.postCartDeleteProduct = (request, response) => {
+exports.postCartDeleteProduct = (request, response, next) => {
 	const { productId } = request.body;
 
 	request.user.removeFromCart(productId)
@@ -108,7 +108,7 @@ exports.postCartDeleteProduct = (request, response) => {
 	});
 };
 
-exports.postOrder = (request, response) => {
+exports.postOrder = (request, response, next) => {
 	request.user
 	.populate('cart.items.productId')
 	.execPopulate()
@@ -140,7 +140,7 @@ exports.postOrder = (request, response) => {
 	});
 };
 
-exports.getOrders = (request, response) => {
+exports.getOrders = (request, response, next) => {
 	Order.find({
 		'user.userId': request.user._id,
 	})

@@ -34,7 +34,7 @@ exports.getLogin = (request, response) => {
 	});
 };
 
-exports.postLogin = (request, response) => {
+exports.postLogin = (request, response, next) => {
 	const { email, password } = request.body;
 
 	const errors = validationResult(request);
@@ -134,7 +134,7 @@ exports.getSignUp = (request, response) => {
 	});
 };
 
-exports.postSignUp = (request, response) => {
+exports.postSignUp = (request, response, next) => {
 	const { email, password, confirmPassword } = request.body;
 	const errors = validationResult(request);
 
@@ -197,7 +197,7 @@ exports.getReset = (request, response) => {
 	});
 };
 
-exports.postReset = (request, response) => {
+exports.postReset = (request, response, next) => {
 	crypto.randomBytes(32, (error, buffer) => {
 		if (error) {
 			console.log(error);
@@ -270,7 +270,7 @@ exports.getNewPassword = (request, response) => {
 	});
 };
 
-exports.postNewPassword = (request, response) => {
+exports.postNewPassword = (request, response, next) => {
 	const { password, userId, passwordToken } = request.body;
 	let resetUser;
 
