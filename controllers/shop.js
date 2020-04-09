@@ -10,7 +10,12 @@ exports.getProducts = (request, response) => {
 			prods: products,
 		});
 	})
-	.catch((error) => console.log(error));
+	.catch((error) => {
+		const productCreatingError = new Error(error);
+		productCreatingError.httpStatusCode = 500;
+
+		return next(productCreatingError);
+	});
 };
 
 exports.getProduct = (request, response) => {
@@ -24,7 +29,12 @@ exports.getProduct = (request, response) => {
 			product: product,
 		});
 	})
-	.catch((error) => console.log(error));
+	.catch((error) => {
+		const productCreatingError = new Error(error);
+		productCreatingError.httpStatusCode = 500;
+
+		return next(productCreatingError);
+	});
 };
 
 exports.getIndex = (request, response) => {
@@ -36,7 +46,12 @@ exports.getIndex = (request, response) => {
 			prods: products,
 		});
 	})
-	.catch((error) => console.log(error));
+	.catch((error) => {
+		const productCreatingError = new Error(error);
+		productCreatingError.httpStatusCode = 500;
+
+		return next(productCreatingError);
+	});
 };
 
 exports.getCart = (request, response) => {
@@ -52,7 +67,12 @@ exports.getCart = (request, response) => {
 			products,
 		});
 	})
-	.catch((error) => console.log(error));
+	.catch((error) => {
+		const productCreatingError = new Error(error);
+		productCreatingError.httpStatusCode = 500;
+
+		return next(productCreatingError);
+	});
 };
 
 exports.postCart = (request, response) => {
@@ -65,7 +85,12 @@ exports.postCart = (request, response) => {
 		console.log(result);
 		response.redirect('/cart');
 	})
-	.catch((error) => console.log(error));
+	.catch((error) => {
+		const productCreatingError = new Error(error);
+		productCreatingError.httpStatusCode = 500;
+
+		return next(productCreatingError);
+	});
 };
 
 exports.postCartDeleteProduct = (request, response) => {
@@ -75,7 +100,12 @@ exports.postCartDeleteProduct = (request, response) => {
 	.then(() => {
 		response.redirect('/cart');
 	})
-	.catch((error) => console.log(error));
+	.catch((error) => {
+		const productCreatingError = new Error(error);
+		productCreatingError.httpStatusCode = 500;
+
+		return next(productCreatingError);
+	});
 };
 
 exports.postOrder = (request, response) => {
@@ -102,7 +132,12 @@ exports.postOrder = (request, response) => {
 	.then(() => {
 		response.redirect('/orders');
 	})
-	.catch((error) => console.log(error));
+	.catch((error) => {
+		const productCreatingError = new Error(error);
+		productCreatingError.httpStatusCode = 500;
+
+		return next(productCreatingError);
+	});
 };
 
 exports.getOrders = (request, response) => {
@@ -116,5 +151,10 @@ exports.getOrders = (request, response) => {
 			orders,
 		});
 	})
-	.catch((error) => console.log(error));
+	.catch((error) => {
+		const productCreatingError = new Error(error);
+		productCreatingError.httpStatusCode = 500;
+
+		return next(productCreatingError);
+	});
 };

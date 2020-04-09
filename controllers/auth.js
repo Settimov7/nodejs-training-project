@@ -97,7 +97,12 @@ exports.postLogin = (request, response) => {
 			response.redirect('/login');
 		});
 	})
-	.catch((error) => console.log(error));
+	.catch((error) => {
+		const productCreatingError = new Error(error);
+		productCreatingError.httpStatusCode = 500;
+
+		return next(productCreatingError);
+	});
 };
 
 exports.postLogout = (request, response) => {
@@ -169,7 +174,12 @@ exports.postSignUp = (request, response) => {
 			html: '<h1>You successfully signed up!</h1>'
 		});
 	})
-	.catch((error) => console.log(error));
+	.catch((error) => {
+		const productCreatingError = new Error(error);
+		productCreatingError.httpStatusCode = 500;
+
+		return next(productCreatingError);
+	});
 };
 
 exports.getReset = (request, response) => {
@@ -224,7 +234,12 @@ exports.postReset = (request, response) => {
 				`
 			});
 		})
-		.catch((error) => console.log(error));
+		.catch((error) => {
+			const productCreatingError = new Error(error);
+			productCreatingError.httpStatusCode = 500;
+
+			return next(productCreatingError);
+		});
 	});
 };
 
@@ -281,5 +296,10 @@ exports.postNewPassword = (request, response) => {
 	.then(() => {
 		response.redirect('/login');
 	})
-	.catch((error) => console.log(error));
+	.catch((error) => {
+		const productCreatingError = new Error(error);
+		productCreatingError.httpStatusCode = 500;
+
+		return next(productCreatingError);
+	});
 };

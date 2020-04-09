@@ -41,34 +41,56 @@ app.use(csrfProtection);
 app.use(flash());
 
 app.use((request, response, next) => {
-	if (!request.session.user) {
-		return next();
-	}
-
-	User.findById(request.session.user._id)
-	.then((user) => {
-		request.user = user;
-
-		next();
-	})
-	.catch((error) => console.log(error));
-});
-
-app.use((request, response, next) => {
 	response.locals.isAuthenticated = request.session.isLoggedIn;
 	response.locals.csrfToken = request.csrfToken();
 
 	next();
 });
 
+app.use((request, response, next) => {
+	if (!request.session.user) {
+		return next();
+	}
+
+	User.findById(request.session.user._id)
+	.then((user) => {
+		if (!user) {
+			return next();
+		}
+
+		request.user = user;
+
+		next();
+	})
+	.catch((error) => {
+		const productCreatingError = new Error(error);
+		productCreatingError.httpStatusCode = 500;
+
+		return next(productCreatingError);
+	});
+});
+
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
 
+app.get('/500', errorsController.get500);
 app.use(errorsController.get404);
+
+app.use((error, request, response) => {
+	response.status(500).render('500', {
+		pageTitle: 'Error',
+		path: '/500',
+	});
+})
 
 mongoose.connect(MONGODB_URI)
 .then(() => {
 	app.listen(3000);
 })
-.catch((error) => console.log(error));
+.catch((error) => {
+	const productCreatingError = new Error(error);
+	productCreatingError.httpStatusCode = 500;
+
+	return next(productCreatingError);
+});
