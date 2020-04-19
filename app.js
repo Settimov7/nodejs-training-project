@@ -19,7 +19,7 @@ const authRoutes = require('./routes/auth');
 const errorsController = require('./controllers/errors');
 const User = require('./models/user');
 
-const MONGODB_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-pui26.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}`;
+const MONGODB_URI = `mongodb+srv://${ process.env.MONGO_USER }:${ process.env.MONGO_PASSWORD }@cluster0-pui26.mongodb.net/${ process.env.MONGO_DEFAULT_DATABASE }`;
 
 const app = express();
 const MongodbStore = createMongodbStore(session);
@@ -28,6 +28,7 @@ const store = new MongodbStore({
 	collection: 'sessions',
 });
 const csrfProtection = csrf();
+
 const fileStorage = multer.diskStorage({
 	destination: (request, file, callback) => {
 		callback(null, 'images');
@@ -37,7 +38,7 @@ const fileStorage = multer.diskStorage({
 	},
 });
 const fileFilter = (request, file, callback) => {
-	if(file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+	if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
 		callback(null, true);
 	}
 
@@ -107,7 +108,7 @@ app.use(authRoutes);
 app.get('/500', errorsController.get500);
 app.use(errorsController.get404);
 
-app.use((error, request, response, next) => {
+app.use((error, request, response) => {
 	response.status(500).render('500', {
 		pageTitle: 'Error',
 		path: '/500',
